@@ -20,10 +20,10 @@ jobs:
       with:
         path: TopicInfoPatcher
 
-    - name: Checkout CommonLibF4 (libxse - supports 1.11.191)
+    - name: Checkout CommonLibF4 (powerof3 - CMake + correct NG flags)
       uses: actions/checkout@v4
       with:
-        repository: libxse/commonlibf4
+        repository: powerof3/CommonLibF4
         path: CommonLibF4
 
     - name: Setup vcpkg
