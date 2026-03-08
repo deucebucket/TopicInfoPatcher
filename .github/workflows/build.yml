@@ -27,9 +27,10 @@ jobs:
         path: CommonLibF4
 
     - name: Setup vcpkg
-      uses: lukka/run-vcpkg@v11
-      with:
-        vcpkgGitCommitId: 'a42af01b72c28a8e1d7b48107b33e4f286a55ef6'
+      run: |
+        git clone https://github.com/microsoft/vcpkg.git
+        ./vcpkg/bootstrap-vcpkg.bat
+      shell: pwsh
 
     - name: Configure CMake
       shell: pwsh
@@ -38,7 +39,7 @@ jobs:
           -DCMAKE_BUILD_TYPE=$env:BUILD_TYPE `
           -DCOPY_BUILD=OFF `
           -DVCPKG_TARGET_TRIPLET=x64-windows-static-md `
-          -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+          -DCMAKE_TOOLCHAIN_FILE="vcpkg/scripts/buildsystems/vcpkg.cmake"
 
     - name: Build
       shell: pwsh
