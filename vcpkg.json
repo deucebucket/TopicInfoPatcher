@@ -5,9 +5,12 @@
   "homepage": "https://www.nexusmods.com/fallout4/mods/79747",
   "license": "MIT",
   "dependencies": [
+    "args",
     "boost-stl-interfaces",
     "fmt",
+    "rapidcsv",
     "rsm-mmio",
-    "spdlog"
+    "spdlog",
+    "xbyak"
   ]
 }
