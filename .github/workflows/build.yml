@@ -9,6 +9,7 @@ on:
 
 env:
   BUILD_TYPE: Release
+  VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg-cache
 
 jobs:
   build:
@@ -26,10 +27,15 @@ jobs:
         repository: powerof3/CommonLibF4
         path: CommonLibF4
 
+    - name: Create vcpkg binary cache dir
+      shell: pwsh
+      run: New-Item -ItemType Directory -Force "${{ github.workspace }}/vcpkg-cache"
+
     - name: Setup vcpkg
-      uses: friendlyanon/setup-vcpkg@v1
-      with:
-        committish: 943c5ef1c8f6b5e6ced092b242c8299caae2ff01
+      shell: pwsh
+      run: |
+        git clone https://github.com/microsoft/vcpkg.git
+        ./vcpkg/bootstrap-vcpkg.bat
 
     - name: Configure CMake
       shell: pwsh
@@ -38,7 +44,7 @@ jobs:
           -DCMAKE_BUILD_TYPE=$env:BUILD_TYPE `
           -DCOPY_BUILD=OFF `
           -DVCPKG_TARGET_TRIPLET=x64-windows-static-md `
-          -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
+          -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
 
     - name: Build
       shell: pwsh
