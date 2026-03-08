@@ -207,7 +207,7 @@ void ClearCache(std::monostate) {
 
 void SetOverrideFileName_internal(RE::TESTopicInfo *Info, char * name, uint64_t , uint64_t){
 	using func_t = decltype(SetOverrideFileName_internal);
-	static REL::Relocation<func_t> func{ REL::VariantOffset(0x0621710, 0, 0x60C060)};	// Pre-NG, NG, VR
+	static REL::Relocation<func_t> func{ REL::VariantOffset(0x0621710, 0x0621710, 0x60C060)};	// Pre-NG, NG, VR
 
 	logger::info("Info: {:p} Name; {:p}", (void*)Info, (void*)name);
 	func(Info, name, 0, 0);
@@ -317,7 +317,7 @@ F4SE_EXPORT constinit auto F4SEPlugin_Version = []() noexcept {
 	data.UsesSigScanning(false);
 	data.IsLayoutDependent(true);
 	data.HasNoStructUse(false);
-	data.CompatibleVersions({ F4SE::RUNTIME_1_10_984, F4SE::RUNTIME_1_10_163, F4SE::RUNTIME_LATEST_VR });
+	data.CompatibleVersions({ F4SE::RUNTIME_1_10_984, F4SE::RUNTIME_1_10_163, F4SE::RUNTIME_LATEST_VR, F4SE::RUNTIME_LATEST });
 
 	return data;
 	}();

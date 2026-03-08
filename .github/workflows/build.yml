@@ -1,0 +1,54 @@
+name: Build TopicInfoPatcher
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout TopicInfoPatcher
+      uses: actions/checkout@v4
+      with:
+        path: TopicInfoPatcher
+
+    - name: Checkout CommonLibF4 (libxse - supports 1.11.191)
+      uses: actions/checkout@v4
+      with:
+        repository: libxse/commonlibf4
+        path: CommonLibF4
+
+    - name: Setup vcpkg
+      uses: lukka/run-vcpkg@v11
+      with:
+        vcpkgGitCommitId: 'a42af01b72c28a8e1d7b48107b33e4f286a55ef6'
+
+    - name: Configure CMake
+      shell: pwsh
+      run: |
+        cmake -B build -S TopicInfoPatcher `
+          -DCMAKE_BUILD_TYPE=$env:BUILD_TYPE `
+          -DCOPY_BUILD=OFF `
+          -DVCPKG_TARGET_TRIPLET=x64-windows-static-md `
+          -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+
+    - name: Build
+      shell: pwsh
+      run: cmake --build build --config $env:BUILD_TYPE
+
+    - name: Upload DLL artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: TopicInfoPatcher
+        path: |
+          build/${{ env.BUILD_TYPE }}/TopicInfoPatcher.dll
+          TopicInfoPatcher/src/TopicInfoPatcher.psc
+          TopicInfoPatcher/TopicInfoPatcher.pex
