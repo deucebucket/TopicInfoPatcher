@@ -9,7 +9,6 @@ on:
 
 env:
   BUILD_TYPE: Release
-  VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg-cache
 
 jobs:
   build:
@@ -21,15 +20,23 @@ jobs:
       with:
         path: TopicInfoPatcher
 
-    - name: Checkout CommonLibF4 (powerof3 - CMake + correct NG flags)
+    - name: Checkout CommonLibF4 (alandtse - CMake support)
       uses: actions/checkout@v4
       with:
-        repository: powerof3/CommonLibF4
+        repository: alandtse/CommonLibF4
+        ref: master
         path: CommonLibF4
 
-    - name: Create vcpkg binary cache dir
+    - name: Patch Address Library flag for NG 1.11.191
       shell: pwsh
-      run: New-Item -ItemType Directory -Force "${{ github.workspace }}/vcpkg-cache"
+      run: |
+        $file = "CommonLibF4/CommonLibF4/include/F4SE/Interfaces.h"
+        $content = Get-Content $file -Raw
+        # Change bit 1 (pre-NG) to bit 2 (NG 1.11.137+) for Address Library flag
+        $content = $content -replace '1 << 1 is for address library for 1.10.980', '1 << 2 is for address library for 1.11.137'
+        $content = $content -replace 'addressIndependence = 1u << 1;', 'addressIndependence = 1u << 2;'
+        Set-Content $file $content -NoNewline
+        Write-Host "Patched Address Library flag from bit 1 to bit 2 for NG support"
 
     - name: Setup vcpkg
       shell: pwsh
