@@ -4,6 +4,7 @@
   "description": "Patches TopicInfo text for Mantella F4",
   "homepage": "https://www.nexusmods.com/fallout4/mods/79747",
   "license": "MIT",
+  "builtin-baseline": "4cfabe769eaceb209ea37267e8c50c43b86a4a7b",
   "dependencies": [
     "args",
     "boost-stl-interfaces",
